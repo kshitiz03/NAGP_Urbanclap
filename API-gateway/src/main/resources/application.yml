@@ -1,0 +1,40 @@
+---
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: "${EUREKA_HOST:${eureka.host}}/eureka"
+  host: "http://localhost:8761"
+  instance:
+    lease-renewal-interval-in-seconds: 30
+    preferIpAddress: true
+server:
+  port: "${PORT:8999}"
+spring:
+  application:
+    name: api-gateway
+zuul:
+  host:
+    connect-timeout-millis: 5000
+    max-per-route-connections: 10000
+    max-total-connections: 5000
+    socket-timeout-millis: 60000
+    time-to-live: -1
+  routes:
+    catalog-service:
+      path: /catalog/**
+      serviceId: CATALOG-SERVICE
+      stripPrefix: false
+    notification-service:
+      path: /notification/**
+      serviceId: NOTIFICATION-SERVICE
+      stripPrefix: false
+    orders-service:
+      path: /orders/**
+      serviceId: ORDERS-SERVICE
+      stripPrefix: false
+    ums-service:
+      path: "/end-user/**,/provider/**"
+      serviceId: UMS-SERVICE
+      stripPrefix: false
+  semaphore:
+    max-semaphores: 500
